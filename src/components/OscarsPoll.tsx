@@ -1,0 +1,190 @@
+
+import React, { useState } from 'react';
+import { ChevronRight, ChevronLeft, Award, Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import FormStep from './FormStep';
+import ProgressBar from './ProgressBar';
+
+interface PollData {
+  bestPicture: string;
+  bestActor: string;
+  bestActress: string;
+  bestDirector: string;
+  mostOverrated: string;
+  email: string;
+}
+
+const OscarsPoll = () => {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [pollData, setPollData] = useState<PollData>({
+    bestPicture: '',
+    bestActor: '',
+    bestActress: '',
+    bestDirector: '',
+    mostOverrated: '',
+    email: ''
+  });
+
+  const questions = [
+    {
+      id: 'welcome',
+      type: 'welcome',
+      title: 'Oscars 2025 Poll',
+      subtitle: 'Share your predictions for the biggest night in Hollywood',
+      description: 'This will take about 2 minutes to complete.'
+    },
+    {
+      id: 'bestPicture',
+      type: 'choice',
+      title: 'Who will win Best Picture?',
+      subtitle: 'Choose your top pick for the most prestigious award',
+      options: [
+        'Dune: Part Two',
+        'Oppenheimer',
+        'Killers of the Flower Moon',
+        'Poor Things',
+        'The Zone of Interest',
+        'Barbie'
+      ]
+    },
+    {
+      id: 'bestActor',
+      type: 'choice',
+      title: 'Best Actor in a Leading Role?',
+      subtitle: 'Who deserves the golden statue?',
+      options: [
+        'Cillian Murphy - Oppenheimer',
+        'Paul Giamatti - The Holdovers',
+        'Bradley Cooper - Maestro',
+        'Colman Domingo - Rustin',
+        'Jeffrey Wright - American Fiction'
+      ]
+    },
+    {
+      id: 'bestActress',
+      type: 'choice',
+      title: 'Best Actress in a Leading Role?',
+      subtitle: 'Your prediction for the leading lady',
+      options: [
+        'Emma Stone - Poor Things',
+        'Carey Mulligan - Maestro',
+        'Sandra Hüller - Anatomy of a Fall',
+        'Margot Robbie - Barbie',
+        'Lily Gladstone - Killers of the Flower Moon'
+      ]
+    },
+    {
+      id: 'bestDirector',
+      type: 'choice',
+      title: 'Best Director?',
+      subtitle: 'Who will take home the directing prize?',
+      options: [
+        'Christopher Nolan - Oppenheimer',
+        'Martin Scorsese - Killers of the Flower Moon',
+        'Yorgos Lanthimos - Poor Things',
+        'Justine Triet - Anatomy of a Fall',
+        'Jonathan Glazer - The Zone of Interest'
+      ]
+    },
+    {
+      id: 'mostOverrated',
+      type: 'choice',
+      title: 'Most overrated nomination?',
+      subtitle: 'Which film do you think doesn\'t deserve the hype?',
+      options: [
+        'Barbie',
+        'Oppenheimer',
+        'Poor Things',
+        'Maestro',
+        'The Zone of Interest',
+        'None - they all deserve it!'
+      ]
+    },
+    {
+      id: 'email',
+      type: 'input',
+      title: 'What\'s your email?',
+      subtitle: 'We\'ll send you the results after the ceremony',
+      placeholder: 'your@email.com',
+      inputType: 'email'
+    },
+    {
+      id: 'thanks',
+      type: 'thanks',
+      title: 'Thank you! 🏆',
+      subtitle: 'Your predictions have been recorded',
+      description: 'We\'ll email you the results after the Oscars ceremony on March 10th, 2025.'
+    }
+  ];
+
+  const handleNext = () => {
+    if (currentStep < questions.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleAnswer = (value: string) => {
+    const question = questions[currentStep];
+    setPollData(prev => ({
+      ...prev,
+      [question.id]: value
+    }));
+    
+    // Auto-advance for choice questions
+    if (question.type === 'choice') {
+      setTimeout(handleNext, 300);
+    }
+  };
+
+  const handleSubmit = () => {
+    console.log('Poll submitted:', pollData);
+    handleNext();
+  };
+
+  const currentQuestion = questions[currentStep];
+  const progress = ((currentStep + 1) / questions.length) * 100;
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white relative overflow-hidden">
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-gray-900 to-amber-900/20" />
+      
+      {/* Progress bar */}
+      <ProgressBar progress={progress} />
+      
+      {/* Main content */}
+      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
+        <div className="w-full max-w-2xl">
+          <FormStep
+            question={currentQuestion}
+            value={pollData[currentQuestion.id as keyof PollData] || ''}
+            onAnswer={handleAnswer}
+            onNext={handleNext}
+            onBack={handleBack}
+            onSubmit={handleSubmit}
+            canGoBack={currentStep > 0 && currentStep < questions.length - 1}
+            canGoNext={currentStep < questions.length - 1}
+            isLastStep={currentStep === questions.length - 2}
+          />
+        </div>
+      </div>
+
+      {/* Decorative elements */}
+      <div className="absolute top-10 left-10 opacity-20">
+        <Award className="w-20 h-20 text-amber-400 animate-pulse" />
+      </div>
+      <div className="absolute bottom-10 right-10 opacity-20">
+        <Star className="w-16 h-16 text-purple-400 animate-pulse" />
+      </div>
+    </div>
+  );
+};
+
+export default OscarsPoll;
