@@ -1,20 +1,9 @@
-
 import React, { useState } from 'react';
 import { ChevronRight, ChevronLeft, Award, Mail, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-
-interface Question {
-  id: string;
-  type: 'welcome' | 'choice' | 'input' | 'thanks';
-  title: string;
-  subtitle: string;
-  description?: string;
-  options?: string[];
-  placeholder?: string;
-  inputType?: string;
-}
+import { Question } from '@/types/poll';
 
 interface FormStepProps {
   question: Question;
