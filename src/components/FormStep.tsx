@@ -1,9 +1,11 @@
+
 import React, { useState } from 'react';
 import { ChevronRight, ChevronLeft, Award, Mail, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Question } from '@/types/poll';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface FormStepProps {
   question: Question;
@@ -28,6 +30,7 @@ const FormStep: React.FC<FormStepProps> = ({
   canGoNext,
   isLastStep
 }) => {
+  const { isDarkMode } = useTheme();
   const [inputValue, setInputValue] = useState(value);
 
   const handleInputSubmit = () => {
@@ -52,14 +55,18 @@ const FormStep: React.FC<FormStepProps> = ({
       {question.type === 'welcome' && (
         <div className="text-center space-y-8">
           <div className="flex justify-center">
-            <Award className="w-24 h-24 text-amber-400 animate-pulse" />
+            <Award className="w-24 h-24 text-amber-500 animate-pulse" />
           </div>
           <div className="space-y-4">
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-amber-400 to-purple-400 bg-clip-text text-transparent">
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-amber-500 to-purple-600 bg-clip-text text-transparent">
               {question.title}
             </h1>
-            <p className="text-xl text-gray-300">{question.subtitle}</p>
-            <p className="text-gray-400">{question.description}</p>
+            <p className={`text-xl ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              {question.subtitle}
+            </p>
+            <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              {question.description}
+            </p>
           </div>
           <Button 
             onClick={onNext}
@@ -74,8 +81,12 @@ const FormStep: React.FC<FormStepProps> = ({
       {question.type === 'choice' && (
         <div className="space-y-8">
           <div className="space-y-3">
-            <h2 className="text-3xl font-bold text-white">{question.title}</h2>
-            <p className="text-lg text-gray-300">{question.subtitle}</p>
+            <h2 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              {question.title}
+            </h2>
+            <p className={`text-lg ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              {question.subtitle}
+            </p>
           </div>
           
           <div className="space-y-3">
@@ -84,15 +95,25 @@ const FormStep: React.FC<FormStepProps> = ({
                 key={index}
                 className={`p-4 cursor-pointer transition-all duration-300 border-2 hover:scale-[1.02] ${
                   value === option
-                    ? 'border-amber-400 bg-amber-400/10 shadow-lg shadow-amber-400/20'
-                    : 'border-gray-700 bg-gray-800/50 hover:border-gray-600 hover:bg-gray-700/50'
+                    ? isDarkMode 
+                      ? 'border-amber-400 bg-amber-400/10 shadow-lg shadow-amber-400/20'
+                      : 'border-amber-500 bg-amber-50 shadow-lg shadow-amber-500/20'
+                    : isDarkMode
+                      ? 'border-gray-700 bg-gray-800/50 hover:border-gray-600 hover:bg-gray-700/50'
+                      : 'border-gray-300 bg-white hover:border-gray-400 hover:bg-gray-50'
                 }`}
                 onClick={() => onAnswer(option)}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-white font-medium">{option}</span>
+                  <span className={`font-medium ${
+                    isDarkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    {option}
+                  </span>
                   {value === option && (
-                    <div className="w-3 h-3 bg-amber-400 rounded-full animate-pulse" />
+                    <div className={`w-3 h-3 rounded-full animate-pulse ${
+                      isDarkMode ? 'bg-amber-400' : 'bg-amber-500'
+                    }`} />
                   )}
                 </div>
               </Card>
@@ -104,20 +125,30 @@ const FormStep: React.FC<FormStepProps> = ({
       {question.type === 'input' && (
         <div className="space-y-8">
           <div className="space-y-3">
-            <h2 className="text-3xl font-bold text-white">{question.title}</h2>
-            <p className="text-lg text-gray-300">{question.subtitle}</p>
+            <h2 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              {question.title}
+            </h2>
+            <p className={`text-lg ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              {question.subtitle}
+            </p>
           </div>
           
           <div className="space-y-6">
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Mail className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
+                isDarkMode ? 'text-gray-400' : 'text-gray-500'
+              }`} />
               <Input
                 type={question.inputType || 'text'}
                 placeholder={question.placeholder}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
-                className="pl-12 py-6 text-lg bg-gray-800/50 border-gray-700 text-white placeholder-gray-400 focus:border-amber-400 focus:ring-amber-400"
+                className={`pl-12 py-6 text-lg border-2 focus:ring-2 ${
+                  isDarkMode 
+                    ? 'bg-gray-800/50 border-gray-700 text-white placeholder-gray-400 focus:border-amber-400 focus:ring-amber-400'
+                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-amber-500 focus:ring-amber-500'
+                }`}
               />
             </div>
             
@@ -141,18 +172,22 @@ const FormStep: React.FC<FormStepProps> = ({
         <div className="text-center space-y-8">
           <div className="flex justify-center">
             <div className="relative">
-              <Award className="w-24 h-24 text-amber-400 animate-bounce" />
+              <Award className="w-24 h-24 text-amber-500 animate-bounce" />
               <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                 <span className="text-white font-bold">✓</span>
               </div>
             </div>
           </div>
           <div className="space-y-4">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-green-400 to-amber-400 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-green-500 to-amber-500 bg-clip-text text-transparent">
               {question.title}
             </h1>
-            <p className="text-xl text-gray-300">{question.subtitle}</p>
-            <p className="text-gray-400">{question.description}</p>
+            <p className={`text-xl ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              {question.subtitle}
+            </p>
+            <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              {question.description}
+            </p>
           </div>
         </div>
       )}
@@ -163,14 +198,18 @@ const FormStep: React.FC<FormStepProps> = ({
           <Button
             onClick={onBack}
             variant="ghost"
-            className={`text-gray-400 hover:text-white transition-all duration-300 ${
-              canGoBack ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            className={`transition-all duration-300 ${
+              canGoBack 
+                ? isDarkMode 
+                  ? 'text-gray-400 hover:text-white opacity-100' 
+                  : 'text-gray-600 hover:text-gray-900 opacity-100'
+                : 'opacity-0 pointer-events-none'
             }`}
           >
             <ChevronLeft className="mr-2 w-4 h-4" /> Back
           </Button>
           
-          <div className="text-sm text-gray-500">
+          <div className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
             Press Enter ↵
           </div>
         </div>

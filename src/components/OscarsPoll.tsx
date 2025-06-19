@@ -57,13 +57,13 @@ const OscarsPoll = () => {
     <div className={`min-h-screen relative overflow-hidden transition-colors duration-300 ${
       isDarkMode 
         ? 'bg-gray-900 text-white' 
-        : 'bg-gray-50 text-gray-900'
+        : 'bg-white text-gray-900'
     }`}>
       {/* Background gradient */}
       <div className={`absolute inset-0 transition-colors duration-300 ${
         isDarkMode 
           ? 'bg-gradient-to-br from-purple-900/20 via-gray-900 to-amber-900/20'
-          : 'bg-gradient-to-br from-purple-100/50 via-gray-50 to-amber-100/50'
+          : 'bg-gradient-to-br from-purple-50 via-white to-amber-50'
       }`} />
       
       {/* Theme toggle */}
@@ -90,12 +90,12 @@ const OscarsPoll = () => {
       </div>
 
       {/* Decorative elements */}
-      <div className="absolute top-10 left-10 opacity-20">
+      <div className="absolute top-10 left-10 opacity-30">
         <Award className={`w-20 h-20 animate-pulse ${
           isDarkMode ? 'text-amber-400' : 'text-amber-600'
         }`} />
       </div>
-      <div className="absolute bottom-10 right-10 opacity-20">
+      <div className="absolute bottom-10 right-10 opacity-30">
         <Star className={`w-16 h-16 animate-pulse ${
           isDarkMode ? 'text-purple-400' : 'text-purple-600'
         }`} />
