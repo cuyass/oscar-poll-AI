@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import FormStep from './FormStep';
 import ProgressBar from './ProgressBar';
+import ThemeToggle from './ThemeToggle';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface PollData {
   bestPicture: string;
@@ -26,6 +28,7 @@ interface Question {
 }
 
 const OscarsPoll = () => {
+  const { isDarkMode } = useTheme();
   const [currentStep, setCurrentStep] = useState(0);
   const [pollData, setPollData] = useState<PollData>({
     bestPicture: '',
@@ -162,9 +165,20 @@ const OscarsPoll = () => {
   const progress = ((currentStep + 1) / questions.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white relative overflow-hidden">
+    <div className={`min-h-screen relative overflow-hidden transition-colors duration-300 ${
+      isDarkMode 
+        ? 'bg-gray-900 text-white' 
+        : 'bg-gray-50 text-gray-900'
+    }`}>
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-gray-900 to-amber-900/20" />
+      <div className={`absolute inset-0 transition-colors duration-300 ${
+        isDarkMode 
+          ? 'bg-gradient-to-br from-purple-900/20 via-gray-900 to-amber-900/20'
+          : 'bg-gradient-to-br from-purple-100/50 via-gray-50 to-amber-100/50'
+      }`} />
+      
+      {/* Theme toggle */}
+      <ThemeToggle />
       
       {/* Progress bar */}
       <ProgressBar progress={progress} />
@@ -188,10 +202,14 @@ const OscarsPoll = () => {
 
       {/* Decorative elements */}
       <div className="absolute top-10 left-10 opacity-20">
-        <Award className="w-20 h-20 text-amber-400 animate-pulse" />
+        <Award className={`w-20 h-20 animate-pulse ${
+          isDarkMode ? 'text-amber-400' : 'text-amber-600'
+        }`} />
       </div>
       <div className="absolute bottom-10 right-10 opacity-20">
-        <Star className="w-16 h-16 text-purple-400 animate-pulse" />
+        <Star className={`w-16 h-16 animate-pulse ${
+          isDarkMode ? 'text-purple-400' : 'text-purple-600'
+        }`} />
       </div>
     </div>
   );
