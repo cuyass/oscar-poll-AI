@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ChevronRight, ChevronLeft, Award, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,6 +14,17 @@ interface PollData {
   email: string;
 }
 
+interface Question {
+  id: string;
+  type: 'welcome' | 'choice' | 'input' | 'thanks';
+  title: string;
+  subtitle: string;
+  description?: string;
+  options?: string[];
+  placeholder?: string;
+  inputType?: string;
+}
+
 const OscarsPoll = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [pollData, setPollData] = useState<PollData>({
@@ -26,17 +36,17 @@ const OscarsPoll = () => {
     email: ''
   });
 
-  const questions = [
+  const questions: Question[] = [
     {
       id: 'welcome',
-      type: 'welcome',
+      type: 'welcome' as const,
       title: 'Oscars 2025 Poll',
       subtitle: 'Share your predictions for the biggest night in Hollywood',
       description: 'This will take about 2 minutes to complete.'
     },
     {
       id: 'bestPicture',
-      type: 'choice',
+      type: 'choice' as const,
       title: 'Who will win Best Picture?',
       subtitle: 'Choose your top pick for the most prestigious award',
       options: [
@@ -50,7 +60,7 @@ const OscarsPoll = () => {
     },
     {
       id: 'bestActor',
-      type: 'choice',
+      type: 'choice' as const,
       title: 'Best Actor in a Leading Role?',
       subtitle: 'Who deserves the golden statue?',
       options: [
@@ -63,7 +73,7 @@ const OscarsPoll = () => {
     },
     {
       id: 'bestActress',
-      type: 'choice',
+      type: 'choice' as const,
       title: 'Best Actress in a Leading Role?',
       subtitle: 'Your prediction for the leading lady',
       options: [
@@ -76,7 +86,7 @@ const OscarsPoll = () => {
     },
     {
       id: 'bestDirector',
-      type: 'choice',
+      type: 'choice' as const,
       title: 'Best Director?',
       subtitle: 'Who will take home the directing prize?',
       options: [
@@ -89,7 +99,7 @@ const OscarsPoll = () => {
     },
     {
       id: 'mostOverrated',
-      type: 'choice',
+      type: 'choice' as const,
       title: 'Most overrated nomination?',
       subtitle: 'Which film do you think doesn\'t deserve the hype?',
       options: [
@@ -103,7 +113,7 @@ const OscarsPoll = () => {
     },
     {
       id: 'email',
-      type: 'input',
+      type: 'input' as const,
       title: 'What\'s your email?',
       subtitle: 'We\'ll send you the results after the ceremony',
       placeholder: 'your@email.com',
@@ -111,7 +121,7 @@ const OscarsPoll = () => {
     },
     {
       id: 'thanks',
-      type: 'thanks',
+      type: 'thanks' as const,
       title: 'Thank you! 🏆',
       subtitle: 'Your predictions have been recorded',
       description: 'We\'ll email you the results after the Oscars ceremony on March 10th, 2025.'
